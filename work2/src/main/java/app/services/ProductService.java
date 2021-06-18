@@ -67,4 +67,18 @@ public class ProductService {
         productRepository.remove(product);
         return true;
     }
+
+    public int getCount() {
+        return productRepository.findAll().size();
+    }
+
+    public float getAvg() {
+        float sum = 0f;
+        int count = 0;
+        for (Product p : productRepository.findAll()) {
+            sum += p.getCost();
+            count++;
+        }
+        return count == 0 ? 0f : sum / count;
+    }
 }

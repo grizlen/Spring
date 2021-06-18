@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class CmdController {
@@ -39,38 +41,43 @@ public class CmdController {
         String[] cmd = scanner.nextLine().split(" ", 2);
         if (cmd.length == 0 || cmd[0].isEmpty()) {
             help();
-        } else if (cmd[0].equalsIgnoreCase("all")) {
+            return started;
+        }
+        if (cmd[0].equalsIgnoreCase("all")) {
             all();
-        } else if (cmd[0].equalsIgnoreCase("add")) {
-            if (cmd.length == 2) {
-                create(cmd[1]);
-            } else {
-                help();
+            return started;
+        }
+        try {
+            if (cmd[0].equalsIgnoreCase("add")) {
+                create(getArgs(cmd));
+            } else if (cmd[0].equalsIgnoreCase("title")) {
+                rename(getArgs(cmd));
+            } else if (cmd[0].equalsIgnoreCase("cost")) {
+                cost(getArgs(cmd));
+            } else if (cmd[0].equalsIgnoreCase("del")) {
+                delete(getArgs(cmd)[0]);
+            } else if (cmd[0].equalsIgnoreCase("count")) {
+                count();
+            } else if (cmd[0].equalsIgnoreCase("avg")) {
+                average();
+            } else if (cmd[0].equalsIgnoreCase("exit")) {
+                started = false;
             }
-        } else if (cmd[0].equalsIgnoreCase("title")) {
-            if (cmd.length == 2) {
-                rename(cmd[1]);
-            } else {
-                help();
-            }
-        } else if (cmd[0].equalsIgnoreCase("cost")) {
-            if (cmd.length == 2) {
-                cost(cmd[1]);
-            } else {
-                help();
-            }
-        } else if (cmd[0].equalsIgnoreCase("del")) {
-            if (cmd.length == 2) {
-                delete(cmd[1]);
-            } else {
-                help();
-            }
-        } else if (cmd[0].equalsIgnoreCase("exit")) {
-            started = false;
-        } else {
+        } catch (Exception e) {
             help();
         }
         return started;
+    }
+
+    private String[] getArgs(String[] cmd) throws Exception {
+        if (cmd.length == 2) {
+            return Arrays.stream(cmd[1].split(","))
+                    .map(s -> s.trim())
+                    .toArray(String[]::new);
+
+        } else {
+            throw new Exception("Invalid parameters.");
+        }
     }
 
     private void all() {
@@ -79,40 +86,37 @@ public class CmdController {
         list.forEach(p -> System.out.printf("%d %s cost %.2f\n", p.getId(), p.getTitle(), p.getCost()));
     }
 
-    private void create(String args) {
-        String[] params = args.split(",");
-        if (params.length != 2) {
+    private void create(String[] args) {
+        if (args.length != 2) {
             help();
             return;
         }
-        String n = params[0].trim();
-        float c = Float.parseFloat(params[1].trim());
+        String n = args[0];
+        float c = Float.parseFloat(args[1]);
         if (productService.addProduct(n, c)) {
             System.out.printf("Create: %s cost %.2f\n", n, c);
         }
     }
 
-    private void rename(String args) {
-        String[] params = args.split(",");
-        if (params.length != 2) {
+    private void rename(String[] args) {
+        if (args.length != 2) {
             help();
             return;
         }
-        int id = Integer.parseInt(params[0].trim());
-        String n = params[1].trim();
+        int id = Integer.parseInt(args[0]);
+        String n = args[1];
         if (productService.rename(id, n)) {
             System.out.printf("product: %d now \"%s\"\n", id, n);
         }
     }
 
-    private void cost(String args) {
-        String[] params = args.split(",");
-        if (params.length != 2) {
+    private void cost(String[] args) {
+        if (args.length != 2) {
             help();
             return;
         }
-        int id = Integer.parseInt(params[0].trim());
-        float c = Float.parseFloat(params[1].trim());
+        int id = Integer.parseInt(args[0].trim());
+        float c = Float.parseFloat(args[1].trim());
         if (productService.recost(id, c)) {
             System.out.printf("product: %d cost = %.2f\n", id, c);
         }
@@ -125,6 +129,14 @@ public class CmdController {
         }
     }
 
+    private void count() {
+        System.out.println("Count all products = " + productService.getCount());
+    }
+
+    private void average() {
+        System.out.println("Average cost of all products = " + productService.getAvg());
+    }
+
     public void help() {
         System.out.println("valid commands:");
         System.out.println("\tall");
@@ -132,6 +144,8 @@ public class CmdController {
         System.out.println("\title id,newTitle");
         System.out.println("\tcost id,newcost");
         System.out.println("\tdel id");
+        System.out.println("\tcount");
+        System.out.println("\tavg");
         System.out.println("\texit");
     }
 
