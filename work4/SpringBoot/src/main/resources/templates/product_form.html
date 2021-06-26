@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Товар</title>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${product.id} ? 'Редактирование товара' : 'Добавление товара'" />
+    <form class="form" th:action="@{/product_form}" th:object="${product}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <div class="form-grid">
+            <label class="paragraf" for="title">Наименование</label>
+            <label class="paragraf" for="cost">Цена</label>
+            <input class="form-input" type="text" id="title" th:field="*{title}" />
+            <input class="form-input" type="text" id="cost" th:field="*{cost}" />
+        </div>
+        <button class="button-face button-text" type="submit">Cохранить</button>
+        <div class="button-face"><a class="button-text" th:href="@{/products}">Отмена</a></div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Товары</title>
+</head>
+  <body>
+    <div class="container">
+      <h1>Список товаров</h1>
+      <div class="button-face">
+        <a class="button-text" href="#" th:href="@{/product_form}">Новый товар</a>
+      </div>
+      <div class="product_box">
+        <div class="product_card" th:each="p : ${products}">
+          <div class="product_info">
+            <P class="paragraf" th:text="'id: ' + ${p.id}"/>
+            <p class="paragraf" th:text="${p.title}"/>
+            <p class="paragraf" th:text="${p.cost}"/>
+          </div>
+          <div class="product_control">
+            <div class="button-face">
+              <a class="button-text" href="#" th:href="@{/product_form(id=${p.id})}">Изменить</a><br>
+            </div>
+            <div class="button-face">
+              <a class="button-text" href="#" th:href="@{/product_delete(id=${p.id})}">Удалить</a><br>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="button-face">
+        <a class="button-text" href="#" th:href="@{/product_form}">Новый товар</a>
+      </div>
+    </div>
+  </body>
+</html>
