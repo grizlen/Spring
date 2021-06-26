@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Товары</title>
+</head>
+  <body>
+    <h1>Список товаров</h1>
+    <ul>
+      <li th:each="p : ${products}">
+        <div>
+          <p th:text="${p.toString}"/>
+          <a href="product_form" th:href="@{/product_form(id=${p.id})}">изменить</a>
+          <a href="product_form" th:href="@{/product_delete(id=${p.id})}">удалить</a>
+        </div>
+      </li>
+    </ul>
+    <a href="product_form" th:href="@{/product_form}">Добавить</a>
+  </body>
+</html>
