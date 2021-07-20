@@ -10,22 +10,16 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "categories")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private Float price;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 
-    public Product(String title, Float price, Category category) {
+    public Category(String title) {
         this.title = title;
-        this.price = price;
-        this.category = category;
     }
 
 }

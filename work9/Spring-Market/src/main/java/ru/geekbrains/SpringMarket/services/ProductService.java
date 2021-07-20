@@ -1,13 +1,19 @@
 package ru.geekbrains.SpringMarket.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import ru.geekbrains.SpringMarket.model.Category;
 import ru.geekbrains.SpringMarket.model.Product;
+import ru.geekbrains.SpringMarket.model.dto.ProductDTO;
+import ru.geekbrains.SpringMarket.repositories.CategryRepository;
 import ru.geekbrains.SpringMarket.repositories.ProductRepository;
+import ru.geekbrains.SpringMarket.repositories.specifications.ProductSpecifications;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -15,34 +21,40 @@ public class ProductService {
 
     private static final int ITEMS_ON_PAGE = 5;
 
-    @Autowired
     private final ProductRepository productRepository;
+    private final CategryRepository categryRepository;
 
-    public Page<Product> findAll(Specification<Product> spec, int page, int pageSize) {
+    public Page<ProductDTO> findAll(MultiValueMap<String, String> params, int page, int pageSize) {
         if (page < 0) {
             page = 0;
         }
-        return productRepository.findAll(spec, PageRequest.of(page, pageSize < ITEMS_ON_PAGE ? ITEMS_ON_PAGE : pageSize));
+        Specification<Product> spec = ProductSpecifications.build(params);
+        PageRequest pr = PageRequest.of(page, pageSize < ITEMS_ON_PAGE ? ITEMS_ON_PAGE : pageSize);
+        return productRepository.findAll(spec, pr).map(ProductDTO::new);
     }
 
-    public Product getById(Long id) {
-        return productRepository.findById(id).get();
-    }
-
-    public Product add(String name, Float price) {
-        return productRepository.save(new Product(name, price));
+    public Optional<ProductDTO> getById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        return Optional.ofNullable(new ProductDTO(product.get()));
     }
 
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
 
-    public Product add(Product product) {
-        product.setId(null);
-        return productRepository.save(product);
+    private Product fromProductDTO(ProductDTO dto) {
+        Category cat = categryRepository.findByTitle(dto.getCategory());
+        Product product = new Product(dto.getTitle(), dto.getPrice(), cat);
+        product.setId(dto.getId());
+        return product;
     }
 
-    public Product edit(Product product) {
-        return productRepository.save(product);
+    public ProductDTO add(ProductDTO product) {
+        product.setId(null);
+        return new ProductDTO(productRepository.save(fromProductDTO(product)));
+    }
+
+    public ProductDTO edit(ProductDTO product) {
+        return new ProductDTO(productRepository.save(fromProductDTO(product)));
     }
 }

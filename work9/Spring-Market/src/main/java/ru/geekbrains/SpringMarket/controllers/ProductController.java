@@ -1,40 +1,42 @@
 package ru.geekbrains.SpringMarket.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import ru.geekbrains.SpringMarket.exceptions.ResourceNotFoundException;
 import ru.geekbrains.SpringMarket.model.Product;
+import ru.geekbrains.SpringMarket.model.dto.ProductDTO;
 import ru.geekbrains.SpringMarket.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.SpringMarket.services.ProductService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/products")
+@RequestMapping(path = "api/v1/products")
 public class ProductController {
 
-    @Autowired
     private final ProductService productService;
 
     @GetMapping
-    public Page<Product> getAll(
+    public Page<ProductDTO> getAll(
             @RequestParam MultiValueMap<String, String> params,
             @RequestParam(name = "page", defaultValue = "0") Integer page
     ){
-        return productService.findAll(ProductSpecifications.build(params), page, 2);
+        return productService.findAll(params, page, 2);
     }
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
-        return productService.getById(id);
+    public ProductDTO getById(@PathVariable Long id) {
+        return productService.getById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Product with Id: " + id + " not found.")
+        );
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product add(@RequestBody Product product) {
+    public ProductDTO add(@RequestBody ProductDTO product) {
         return productService.add(product);
     }
 
@@ -44,7 +46,7 @@ public class ProductController {
     }
 
     @PutMapping
-    public Product edit(@RequestBody Product product){
+    public ProductDTO edit(@RequestBody ProductDTO product){
         return productService.edit(product);
     }
 }
