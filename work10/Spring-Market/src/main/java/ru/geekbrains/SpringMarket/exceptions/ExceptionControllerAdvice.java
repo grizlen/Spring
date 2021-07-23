@@ -15,4 +15,12 @@ public class ExceptionControllerAdvice {
                 HttpStatus.NOT_FOUND
         );
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleRuntimeException(RuntimeException e) {
+        return new ResponseEntity<>(
+                new MarketError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getClass().getName() +": " + e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
 }

@@ -17,8 +17,8 @@ public class ProductDTO {
     private Float price;
     private String category;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+//    @Autowired
+//    private CategoryRepository categoryRepository;
 
     public ProductDTO(Product product) {
         id = product.getId();

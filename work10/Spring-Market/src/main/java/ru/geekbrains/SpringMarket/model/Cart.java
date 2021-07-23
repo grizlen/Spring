@@ -1,27 +1,20 @@
 package ru.geekbrains.SpringMarket.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class Cart {
 
-    private final List<Long> producIdtList;
+    private Long productId;
+    private Integer count;
 
-    public Cart() {
-        producIdtList = new ArrayList<>();
+    public Cart(Long productId, Integer count) {
+        this.productId = productId;
+        this.count = count;
     }
 
-    public List<Long> getProducts() {
-        return Collections.unmodifiableList(producIdtList);
-    }
-
-    public Long AddProduct(Long productId) {
-        producIdtList.add(productId);
-        return productId;
-    }
-
-    public void deleteProduct(Long id) {
-        producIdtList.remove(id);
-    }
 }
