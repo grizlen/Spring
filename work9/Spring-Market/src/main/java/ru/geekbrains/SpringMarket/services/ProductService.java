@@ -9,7 +9,7 @@ import org.springframework.util.MultiValueMap;
 import ru.geekbrains.SpringMarket.model.Category;
 import ru.geekbrains.SpringMarket.model.Product;
 import ru.geekbrains.SpringMarket.model.dto.ProductDTO;
-import ru.geekbrains.SpringMarket.repositories.CategryRepository;
+import ru.geekbrains.SpringMarket.repositories.CategoryRepository;
 import ru.geekbrains.SpringMarket.repositories.ProductRepository;
 import ru.geekbrains.SpringMarket.repositories.specifications.ProductSpecifications;
 
@@ -22,7 +22,7 @@ public class ProductService {
     private static final int ITEMS_ON_PAGE = 5;
 
     private final ProductRepository productRepository;
-    private final CategryRepository categryRepository;
+    private final CategoryRepository categoryRepository;
 
     public Page<ProductDTO> findAll(MultiValueMap<String, String> params, int page, int pageSize) {
         if (page < 0) {
@@ -43,7 +43,7 @@ public class ProductService {
     }
 
     private Product fromProductDTO(ProductDTO dto) {
-        Category cat = categryRepository.findByTitle(dto.getCategory());
+        Category cat = categoryRepository.findByTitle(dto.getCategory());
         Product product = new Product(dto.getTitle(), dto.getPrice(), cat);
         product.setId(dto.getId());
         return product;

@@ -4,9 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.geekbrains.SpringMarket.model.Category;
 import ru.geekbrains.SpringMarket.model.Product;
-import ru.geekbrains.SpringMarket.repositories.CategryRepository;
+import ru.geekbrains.SpringMarket.repositories.CategoryRepository;
 
 @Getter
 @Setter
@@ -19,7 +18,7 @@ public class ProductDTO {
     private String category;
 
     @Autowired
-    private CategryRepository categryRepository;
+    private CategoryRepository categoryRepository;
 
     public ProductDTO(Product product) {
         id = product.getId();

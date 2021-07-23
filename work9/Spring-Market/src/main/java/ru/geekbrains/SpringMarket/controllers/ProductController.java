@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.SpringMarket.exceptions.ResourceNotFoundException;
-import ru.geekbrains.SpringMarket.model.Product;
 import ru.geekbrains.SpringMarket.model.dto.ProductDTO;
-import ru.geekbrains.SpringMarket.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.SpringMarket.services.ProductService;
 
 @RequiredArgsConstructor
