@@ -38,6 +38,7 @@ insert into roles (name)
 values
 ('ROLE_USER'), ('ROLE_ADMIN');
 
+--password = user
 insert into users (username, password)
 values
-('user', '$2a$10$ADmj6iA2cgUiZIMTQ.ZbrezjSvEWNPeDMXVTnpMFWI4W7h2flFufa')
+('user', '$2a$10$ADmj6iA2cgUiZIMTQ.ZbrezjSvEWNPeDMXVTnpMFWI4W7h2flFufa');

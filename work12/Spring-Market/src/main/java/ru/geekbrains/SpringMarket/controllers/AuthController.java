@@ -1,12 +1,11 @@
 package ru.geekbrains.SpringMarket.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.SpringMarket.configurations.jwt.JwtProvider;
 import ru.geekbrains.SpringMarket.model.User;
+import ru.geekbrains.SpringMarket.model.dto.AuthDTO;
+import ru.geekbrains.SpringMarket.model.dto.AuthResponseDto;
 import ru.geekbrains.SpringMarket.services.UserService;
 
 @RestController
@@ -19,21 +18,20 @@ public class AuthController {
     @Autowired
     private JwtProvider jwtProvider;
 
-    @GetMapping("/signup")
-    public String registerUser(@RequestParam String login, @RequestParam String password) {
+    @PostMapping("/signup")
+    public AuthResponseDto registerUser(@RequestBody AuthDTO authDTO) {
         User user = new User();
-        user.setPassword(password);
-        user.setUserName(login);
+        user.setPassword(authDTO.getPassword());
+        user.setUserName(authDTO.getLogin());
         userService.saveUser(user);
-        return "new user: " + login + " password " + password;
-//        return "OK";
+        String token = jwtProvider.generateToken(user.getUserName());
+        return new AuthResponseDto(authDTO.getLogin(), token);
     }
 
-    @GetMapping("/login")
-    public String authUser(@RequestParam String login, @RequestParam String password) {
-        User user = userService.findByLoginAndPassword(login, password);
+    @PostMapping("/login")
+    public AuthResponseDto authUser(@RequestBody AuthDTO authDTO) {
+        User user = userService.findByLoginAndPassword(authDTO);
         String token = jwtProvider.generateToken(user.getUserName());
-//        return new AuthResponseDto(token);
-        return "login user: " + login + " password " + password + " Token " + token;
+        return new AuthResponseDto(authDTO.getLogin(), token);
     }
 }

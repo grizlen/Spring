@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.geekbrains.SpringMarket.exceptions.UserNotFoudException;
 import ru.geekbrains.SpringMarket.model.Role;
 import ru.geekbrains.SpringMarket.model.User;
+import ru.geekbrains.SpringMarket.model.dto.AuthDTO;
 import ru.geekbrains.SpringMarket.repositories.RoleRepository;
 import ru.geekbrains.SpringMarket.repositories.UserRepository;
 
@@ -35,13 +36,13 @@ public class UserService {
         return userRepository.findByUserName(login);
     }
 
-    public User findByLoginAndPassword(String login, String password) {
-        User userEntity = findByLogin(login);
+    public User findByLoginAndPassword(AuthDTO authDTO) {
+        User userEntity = findByLogin(authDTO.getLogin());
         if (userEntity != null) {
-            if (passwordEncoder.matches(password, userEntity.getPassword())) {
+            if (passwordEncoder.matches(authDTO.getPassword(), userEntity.getPassword())) {
                 return userEntity;
             }
         }
-        throw new UserNotFoudException(String.format("User '%s' not found.", login));
+        throw new UserNotFoudException(String.format("User '%s' not found.", authDTO.getLogin()));
     }
 }

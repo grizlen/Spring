@@ -59,5 +59,41 @@ angular.module('marketApp', []).controller('indexController', function ($scope, 
         $scope.fillTable($scope.productPage.number);
     };
 
+    $scope.sendLogin = function () {
+        $http.post(contextPath + "/api/v1/auth/login", $scope.auth)
+        .then(function(response) {
+            $scope.authResponse = response.data;
+        });
+    };
+
+    $scope.sendRegister = function () {
+        $http.post(contextPath + "/api/v1/auth/signup", $scope.auth)
+        .then(function(response) {
+            $scope.authResponse = response.data;
+        });
+    };
+
+    $scope.showCart = function () {
+        $http.get(contextPath + '/api/v1/cart/all')
+        .then(function(response) {
+            $scope.cartOrders = response.data;
+        });
+    };
+
+    $scope.addToCart = function (id) {
+        $http.get(contextPath + '/api/v1/cart/add/' + id)
+        .then(function(response) {
+            $scope.showCart();
+        });
+    };
+
+    $scope.deleteFromCart = function (id) {
+        $http.delete(contextPath + '/api/v1/cart/' + id)
+        .then(function(response) {
+            $scope.showCart();
+        });
+    };
+
     $scope.fillTable();
+    $scope.showCart();
 });

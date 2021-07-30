@@ -1,10 +1,9 @@
 package ru.geekbrains.SpringMarket.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.SpringMarket.exceptions.ResourceNotFoundException;
-import ru.geekbrains.SpringMarket.model.Cart;
+import ru.geekbrains.SpringMarket.model.CartItem;
 import ru.geekbrains.SpringMarket.model.dto.ProductDTO;
 import ru.geekbrains.SpringMarket.repositories.CartRepository;
 import ru.geekbrains.SpringMarket.services.ProductService;
@@ -22,7 +21,7 @@ public class CartController {
     private final ProductService productService;
 
     @GetMapping("/all")
-    public List<Cart> getProducts() {
+    public List<CartItem> getProducts() {
         return cartRepository.getProducts();
     }
 
@@ -34,7 +33,7 @@ public class CartController {
         return productDTO;
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         cartRepository.deleteProduct(id);
     }

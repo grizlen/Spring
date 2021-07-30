@@ -7,12 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Cart {
+public class CartItem {
 
     private Long productId;
     private Integer count;
 
-    public Cart(Long productId, Integer count) {
+    public CartItem(Long productId, Integer count) {
         this.productId = productId;
         this.count = count;
     }

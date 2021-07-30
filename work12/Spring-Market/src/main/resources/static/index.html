@@ -12,7 +12,38 @@
 </head>
 <body ng-controller="indexController">
 <div>
+    <a href="swagger-ui.html">api</a>
+</div>
+<div>
     <h1>Spring Market</h1>
+</div>
+<div>
+    <table>
+        <tr>
+            <td>
+                <label for="User_Name">Login</label>
+            </td>
+            <td>
+                <input type="text" id="User_Name" ng-model="auth.login"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="User_Password">Password</label>
+            </td>
+            <td>
+                <input type="text" id="User_Password" ng-model="auth.password"/>
+            </td>
+            <td>
+                <button ng-click="sendLogin()">Войти</button>
+            </td>
+            <td>
+                <button ng-click="sendRegister()">Зарегистрироватся</button>
+            </td>
+        </tr>
+    </table>
+    <p>{{auth}}</p>
+    <p>{{authResponse}}</p>
 </div>
 <div>
     <h2>Фильтр</h2>
@@ -71,6 +102,7 @@
             <td ng-if="editProdct.id != item.id">
                 <button ng-click="editItem(item)">Изменить</button>
                 <button ng-click="deleteItem(item.id)">Удалить</button>
+                <button ng-click="addToCart(item.id)">В корзину</button>
             </td>
             <td ng-if="editProdct.id == item.id">
                 <button ng-click="editOk()">Ok</button>
@@ -104,6 +136,24 @@
             </li>
         </ul>
     </nav>
+</div>
+<div>
+    <h2>корзина</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>количество</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in cartOrders">
+                <td>{{item.productId}}</td>
+                <td>{{item.count}}</td>
+                <td><button ng-click="deleteFromCart(item.productId)">Удалить</button></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
